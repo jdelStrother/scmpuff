@@ -16,15 +16,15 @@ import "fmt"
 
 func printScript() {
 	if outputScript {
-		fmt.Println(assetString("data/status_shortcuts.sh"))
+		fmt.Println(assetString("data/status_shortcuts." + shellType))
 	}
 
 	if includeAliases {
-		fmt.Println(assetString("data/aliases.sh"))
+		fmt.Println(assetString("data/aliases." + shellType))
 	}
 
 	if wrapGit {
-		fmt.Println(assetString("data/git_wrapper.sh"))
+		fmt.Println(assetString("data/git_wrapper." + shellType))
 	}
 }
 
