@@ -79,7 +79,7 @@ end
 
 Given(/^the scmpuff environment variables have been cleared$/) do
   (1..50).each do |n|
-    set_env("e#{n}", nil)
+    set_environment_variable("e#{n}", nil)
   end
 end
 
@@ -89,7 +89,7 @@ Given(/^I override the environment variables to:/) do |table|
   table.hashes.each do |row|
     variable = row['variable'].to_s
     value = row['value'].to_s
-    set_env(variable, value)
+    set_environment_variable(variable, value)
   end
 end
 
