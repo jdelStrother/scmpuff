@@ -9,11 +9,11 @@ Feature: optional wrapping of normal git cmds in the shell
     Given I am in a git repository
       And a 4 byte file named "foo.bar"
       And a 4 byte file named "bar.foo"
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -ws)"`
-      And I type "scmpuff_status"
-      And I type "git add 1"
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -ws)" |
+      | scmpuff_status             |
+      | git add 1                  |
+      | exit                       |
     Then the output should contain:
       """
       # On branch: master  |  [*] => $e*
@@ -36,18 +36,16 @@ Feature: optional wrapping of normal git cmds in the shell
   Scenario Outline: Wrapped `git add` can handle files with spaces properly
     Given I am in a git repository
       And an empty file named "file with spaces.txt"
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -ws)"`
-      And I type "scmpuff_status"
-      And I type "git add 1"
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -ws)" |
+      | scmpuff_status             |
+      | git add 1                  |
     Then the exit status should be 0
     And the output should match /new file:\s+\[1\] file with spaces.txt/
     Examples:
       | shell |
       | bash  |
       | zsh   |
-
 
   Scenario Outline: Wrapped `git reset` can handle files with spaces properly
     This is different and more complex because `git status --porcelain` puts it
@@ -56,12 +54,11 @@ Feature: optional wrapping of normal git cmds in the shell
 
     Given I am in a git repository
       And an empty file named "file with spaces.txt"
-    And I successfully run `git add "file with spaces.txt"`
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -ws)"`
-      And I type "scmpuff_status"
-      And I type "git reset 1"
-      And I type "exit"
+      And I successfully run `git add "file with spaces.txt"`
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -ws)" |
+      | scmpuff_status             |
+      | git reset 1                |
     Then the exit status should be 0
     When I run `scmpuff status`
     Then the stdout from "scmpuff status" should contain:
@@ -82,11 +79,10 @@ Feature: optional wrapping of normal git cmds in the shell
       And I successfully run `git commit -m "initial commit"`
       And a 4 byte file named "foo.bar"
       And I successfully run `git add foo.bar`
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -ws)"`
-      And I type "scmpuff_status"
-      And I type "git restore --staged 1"
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -ws)" |
+      | scmpuff_status             |
+      | git restore --staged 1     |
     Then the exit status should be 0
     When I run `scmpuff status`
     Then the stdout from "scmpuff status" should contain:
@@ -105,12 +101,11 @@ Feature: optional wrapping of normal git cmds in the shell
       And an empty file named "file with spaces.txt"
       And an empty file named "file2.txt"
       And an empty file named "untracked file.txt"
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -ws)"`
-      And I type "scmpuff_status"
-      And I type `FILE="file with spaces.txt"`
-      And I type `git add "$FILE" 2`
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -ws)"  |
+      | scmpuff_status              |
+      | FILE="file with spaces.txt" |
+      | git add "$FILE" 2           |
     Then the exit status should be 0
     And the output should contain:
       """

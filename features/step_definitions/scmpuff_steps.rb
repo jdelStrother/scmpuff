@@ -105,6 +105,15 @@ When(/^I type `(.*?)`$/) do |cmd|
   type(cmd)
 end
 
+When(/^I run the following in (.+):$/) do |shell, list|
+  step "I run `#{shell}` interactively"
+  list.raw.each do |item|
+    type(item.first)
+  end
+  type "exit"
+  last_command_started.wait
+end
+
 #
 # Make table/list versions of common Aruba functions:
 #

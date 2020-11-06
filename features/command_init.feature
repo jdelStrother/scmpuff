@@ -31,11 +31,10 @@ Feature: init command
       | -s --wrap=false    | should not |
 
   Scenario Outline: Evaling init -s defines status shortcuts in environment
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -s)"`
-      And I type "type scmpuff_status"
-      And I type "type scmpuff_clear_vars"
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -s)" |
+      | type scmpuff_status       |
+      | type scmpuff_clear_vars   |
     Then the output should not contain "not found"
     Examples:
       | shell |

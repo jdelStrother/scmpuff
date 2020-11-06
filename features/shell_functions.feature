@@ -16,10 +16,10 @@ Feature: scmpuff_status function
     propogated to the user and not swallowed by the shell function, and that
     non-zero exit codes from the underlying process are preserved.
 
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -ws)"`
-      And I type "scmpuff_status"
-      And I type "exit $?"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -ws)" |
+      | scmpuff_status             |
+      | exit $?                    |
     Then the exit status should be 128
     And the output should contain:
       """
@@ -32,10 +32,10 @@ Feature: scmpuff_status function
 
   Scenario Outline: Basic functionality works with shell wrapper.
     Given I am in a git repository
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -ws)"`
-      And I type "scmpuff_status"
-      And I type "exit $?"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -ws)" |
+      | scmpuff_status             |
+      | exit $?                    |
     Then the exit status should be 0
     And the output should contain "No changes (working directory clean)"
     Examples:
@@ -46,11 +46,10 @@ Feature: scmpuff_status function
   Scenario Outline: Sets proper environment variables in shell
     Given I am in a complex working tree status matching scm_breeze tests
       And the scmpuff environment variables have been cleared
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -s)"`
-      And I type "scmpuff_status"
-      And I type `echo -e "e1:$e1\ne2:$e2\ne3:$e3\ne4:$e4\ne5:$e5\n"`
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -s)"                          |
+      | scmpuff_status                                     |
+      | echo -e "e1:$e1\ne2:$e2\ne3:$e3\ne4:$e4\ne5:$e5\n" |
     Then the output should match /^e1:.*new_file$/
       And the output should match /^e2:.*deleted_file$/
       And the output should match /^e3:.*new_file$/
@@ -66,11 +65,10 @@ Feature: scmpuff_status function
       And an empty file named "aa bb"
       And an empty file named "bb|cc"
       And an empty file named "cc*dd"
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -s)"`
-      And I type "scmpuff_status"
-      And I type `echo -e "e1:$e1\ne2:$e2\ne3:$e3\ne4:$e4\n"`
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -s)"                  |
+      | scmpuff_status                             |
+      | echo -e "e1:$e1\ne2:$e2\ne3:$e3\ne4:$e4\n" |
     Then the output should match /^e1:.*aa bb$/
       And the output should match /^e2:.*bb\|cc$/
       And the output should match /^e3:.*cc\*dd$/
@@ -83,14 +81,13 @@ Feature: scmpuff_status function
   Scenario Outline: Clears extra environment variables from before
     Given I am in a complex working tree status matching scm_breeze tests
       And the scmpuff environment variables have been cleared
-    When I run `<shell>` interactively
-      And I type `eval "$(scmpuff init -s)"`
-      And I type "scmpuff_status"
-      And I type "git add new_file"
-      And I type "git commit -m 'so be it'"
-      And I type "scmpuff_status"
-      And I type `echo -e "e1:$e1\ne2:$e2\ne3:$e3\ne4:$e4\ne5:$e5\n"`
-      And I type "exit"
+    When I run the following in <shell>:
+      | eval "$(scmpuff init -s)"                            |
+      | scmpuff_status                                       |
+      | git add new_file                                     |
+      | git commit -m 'so be it'                             |
+      | scmpuff_status                                       |
+      | echo -e "e1:$e1\ne2:$e2\ne3:$e3\ne4:$e4\ne5:$e5\n"   |
     Then the output should match /^e1:.*deleted_file$/
       And the output should match /^e2:.*untracked_file$/
       And the output should match /^e3:$/
