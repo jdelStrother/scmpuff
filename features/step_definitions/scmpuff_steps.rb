@@ -95,7 +95,7 @@ end
 
 Given(/^I override environment variable "(.*?)" to the absolute path of "(.*?)"$/) do |e, f|
   filepath = File.expand_path File.join("tmp/aruba", f)
-  set_env(e, filepath)
+  set_environment_variable(e, filepath)
 end
 
 #

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
 group :test do
-  gem 'aruba',    '~> 0.6.2'
-  gem 'cucumber', '~> 1.3.19'
+  gem 'aruba',    '~> 1.0.3'
+  gem 'cucumber', '~> 5.2.0'
 end
