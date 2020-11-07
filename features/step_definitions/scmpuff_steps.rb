@@ -116,6 +116,10 @@ When(/^I type `(.*?)`$/) do |cmd|
   type(cmd)
 end
 
+When(/^I wait for the last command to finish$/) do
+  last_command_started.wait
+end
+
 #
 # Make table/list versions of common Aruba functions:
 #

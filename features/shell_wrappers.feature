@@ -41,6 +41,7 @@ Feature: optional wrapping of normal git cmds in the shell
       And I type "scmpuff_status"
       And I type "git add 1"
       And I type "exit"
+      And I wait for the last command to finish
     Then the exit status should be 0
     And the output should match /new file:\s+\[1\] file with spaces.txt/
     Examples:
@@ -55,28 +56,15 @@ Feature: optional wrapping of normal git cmds in the shell
     case surprisingly), and also it expands using --relative.
 
     Given I am in a git repository
-    Given an empty file named "file with spaces.txt"
-    ###AAA
-    Given I successfully run `git add "file with spaces.txt"`
-
-    ###BBB
+      And an empty file named "file with spaces.txt"
+      And I successfully run `git add "file with spaces.txt"`
     Given I run `<shell>` interactively
       And I type `eval "$(scmpuff init -ws)"`
       And I type "scmpuff_status"
       And I type "git reset 1"
-      And I type "echo 'DEBUG: PHASE BBB'"
-      And I type "exit"
+      And I type "exit 1"
+      And I wait for the last command to finish
     Then the exit status should be 0
-    ### ^^^ this is checking exit status of AAA, not BBB!
-
-    # Then the output should contain "BBB"
-    ### ^^^ this command however, would force aruba to wait until BBB completes (super hacky option #1)
-
-    # Then I stop the command started last
-    ### ^^^ (hacky option #2) also seems to ensure BBB completes, but throws a deprecation error
-
-    ###CCC
-    ### currently, this phase is failing, because it is taking place *BEFORE* BBB completes
     When I run `scmpuff status`
     Then the stdout from "scmpuff status" should contain:
       """
@@ -101,6 +89,7 @@ Feature: optional wrapping of normal git cmds in the shell
       And I type "scmpuff_status"
       And I type "git restore --staged 1"
       And I type "exit"
+      And I wait for the last command to finish
     Then the exit status should be 0
     When I run `scmpuff status`
     Then the stdout from "scmpuff status" should contain:
